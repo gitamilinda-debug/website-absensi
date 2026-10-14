@@ -3,208 +3,92 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Absensi Sederhana</title>
-  <style>
-    :root { --primary:#3157c8; --ink:#202945; --muted:#68738b; --bg:#f4f6fb; --line:#e4e8f1; }
-    * { box-sizing: border-box; }
-    body { margin:0; font-family:Arial, Helvetica, sans-serif; background:var(--bg); color:var(--ink); }
-    header { background:linear-gradient(135deg,#3157c8,#6b7fe0); color:white; padding:28px 18px 34px; }
-    .header-inner, main { width:min(100% - 32px, 1000px); margin:auto; }
-    header h1 { margin:0 0 8px; font-size:clamp(25px,4vw,34px); }
-    header p { margin:0; opacity:.92; }
-    main { margin-top:-16px; padding-bottom:36px; }
-    .card { background:white; border-radius:16px; padding:22px; margin-bottom:18px; box-shadow:0 8px 24px #26365d0d; border:1px solid #edf0f7; }
-    h2 { font-size:19px; margin:0 0 18px; }
-    .form-grid { display:grid; grid-template-columns:2fr 1fr 1fr auto; gap:12px; align-items:end; }
-    label { display:block; font-size:13px; font-weight:700; margin-bottom:7px; color:#4c5872; }
-    input, select { width:100%; padding:12px; border:1px solid #d8deeb; border-radius:9px; background:white; color:var(--ink); font:inherit; }
-    input:focus, select:focus { outline:2px solid #cbd5ff; border-color:var(--primary); }
-    button { border:0; border-radius:9px; padding:12px 15px; font-weight:700; font-size:14px; cursor:pointer; }
-    .primary { background:var(--primary); color:white; }
-    .secondary { background:#eef1ff; color:#3150b7; }
-    .danger { background:#fff0f0; color:#b42332; padding:8px 10px; }
-    .toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px; }
-    .toolbar input { max-width:240px; }
-    .toolbar select { max-width:190px; }
-    .table-wrap { overflow-x:auto; }
-    table { width:100%; border-collapse:collapse; min-width:600px; }
-    th, td { text-align:left; padding:13px 12px; border-bottom:1px solid var(--line); font-size:14px; }
-    th { color:#66718a; font-size:12px; text-transform:uppercase; letter-spacing:.04em; background:#fafbfe; }
-    .status { display:inline-block; padding:5px 9px; border-radius:20px; font-size:12px; font-weight:700; }
-    .Hadir { color:#167447; background:#e5f8ed; }
-    .Izin { color:#8a5a00; background:#fff3d5; }
-    .Sakit { color:#2456a6; background:#e7efff; }
-    .Alpa { color:#a62b39; background:#ffeaed; }
-    .empty { text-align:center; color:var(--muted); padding:28px 12px; }
-    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px; }
-    .stat { border:1px solid var(--line); border-radius:12px; padding:14px; }
-    .stat span { display:block; color:var(--muted); font-size:12px; margin-bottom:8px; }
-    .stat strong { font-size:24px; }
-    .notice { color:var(--muted); font-size:12px; line-height:1.5; margin:14px 0 0; }
-    footer { text-align:center; color:var(--muted); font-size:12px; padding:0 16px 24px; }
-    @media(max-width:760px) { .form-grid { grid-template-columns:1fr 1fr; } .form-grid .name-field { grid-column:1/-1; } .form-grid button { width:100%; } .stats { grid-template-columns:repeat(2,1fr); } }
-    @media(max-width:430px) { .card { padding:16px; } .form-grid { grid-template-columns:1fr; } .form-grid .name-field { grid-column:auto; } .toolbar input, .toolbar select { max-width:none; flex:1 1 100%; } }
-  </style>
+  <title>RentCar Admin</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <div class="header-inner">
-      <h1>📋 Absensi Sederhana</h1>
-      <p>Catat kehadiran dengan cepat dan praktis.</p>
-    </div>
-  </header>
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-icon">R</span><div><strong>RentCar</strong><small>ADMIN PANEL</small></div></div>
+    <nav>
+      <a class="nav-link active" href="#dashboard">▦ <span>Dashboard</span></a>
+      <a class="nav-link" href="#cars">🚘 <span>Data Mobil</span></a>
+      <a class="nav-link" href="#rentals">▤ <span>Data Penyewaan</span></a>
+    </nav>
+    <div class="sidebar-note"><strong>RentCar Admin</strong><p>Kelola mobil dan penyewaan dalam satu tempat.</p></div>
+  </aside>
 
-  <main>
-    <section class="card">
-      <h2>Tambah Data Kehadiran</h2>
-      <form id="attendanceForm">
-        <div class="form-grid">
-          <div class="name-field">
-            <label for="studentName">Nama</label>
-            <input id="studentName" type="text" placeholder="Masukkan nama lengkap" maxlength="80" required>
-          </div>
-          <div>
-            <label for="attendanceDate">Tanggal</label>
-            <input id="attendanceDate" type="date" required>
-          </div>
-          <div>
-            <label for="attendanceStatus">Status</label>
-            <select id="attendanceStatus" required>
-              <option value="Hadir">Hadir</option>
-              <option value="Izin">Izin</option>
-              <option value="Sakit">Sakit</option>
-              <option value="Alpa">Alpa</option>
-            </select>
-          </div>
-          <button class="primary" type="submit">+ Simpan</button>
-        </div>
-      </form>
-      <p class="notice">Data tersimpan di browser/perangkat ini. Gunakan tombol Ekspor CSV untuk mengunduh salinan data.</p>
+  <main class="main">
+    <header class="topbar">
+      <div><p class="eyebrow">SISTEM MANAJEMEN RENTAL</p><h1>Dashboard</h1></div>
+      <div class="admin-chip"><span class="avatar">A</span><div><strong>Admin</strong><small>Administrator</small></div></div>
+    </header>
+
+    <section id="dashboard" class="stats">
+      <article class="stat-card"><div class="stat-icon blue">🚘</div><div><p>Total Mobil</p><h2 id="totalCars">0</h2></div></article>
+      <article class="stat-card"><div class="stat-icon green">✓</div><div><p>Mobil Tersedia</p><h2 id="availableCars">0</h2></div></article>
+      <article class="stat-card"><div class="stat-icon orange">▤</div><div><p>Total Penyewaan</p><h2 id="totalRentals">0</h2></div></article>
+      <article class="stat-card"><div class="stat-icon purple">Rp</div><div><p>Potensi Pendapatan</p><h2 id="revenue">Rp0</h2></div></article>
     </section>
 
-    <section class="stats" aria-label="Ringkasan absensi">
-      <div class="stat"><span>Total Data</span><strong id="totalCount">0</strong></div>
-      <div class="stat"><span>Hadir</span><strong id="presentCount">0</strong></div>
-      <div class="stat"><span>Izin</span><strong id="permissionCount">0</strong></div>
-      <div class="stat"><span>Sakit + Alpa</span><strong id="otherCount">0</strong></div>
-    </section>
-
-    <section class="card">
-      <h2>Daftar Kehadiran</h2>
-      <div class="toolbar">
-        <input id="searchInput" type="search" placeholder="Cari nama...">
-        <select id="filterStatus" aria-label="Filter status">
-          <option value="">Semua status</option>
-          <option>Hadir</option><option>Izin</option><option>Sakit</option><option>Alpa</option>
-        </select>
-        <button class="secondary" id="exportButton" type="button">Ekspor CSV</button>
+    <section id="cars" class="panel">
+      <div class="panel-heading">
+        <div><p class="eyebrow">INVENTARIS</p><h2>Data Mobil</h2><p class="muted">Kelola daftar mobil rental.</p></div>
+        <button class="button primary" id="openCarForm">＋ Tambah Mobil</button>
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>No.</th><th>Nama</th><th>Tanggal</th><th>Status</th><th>Aksi</th></tr></thead>
-          <tbody id="attendanceBody"></tbody>
+          <thead><tr><th>Mobil</th><th>Nomor Polisi</th><th>Harga / Hari</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody id="carsTable"></tbody>
         </table>
-        <div id="emptyMessage" class="empty">Belum ada data absensi. Tambahkan data melalui formulir di atas.</div>
       </div>
     </section>
+
+    <section id="rentals" class="panel">
+      <div class="panel-heading">
+        <div><p class="eyebrow">TRANSAKSI</p><h2>Data Penyewaan</h2><p class="muted">Catat dan pantau penyewaan pelanggan.</p></div>
+        <button class="button primary" id="openRentalForm">＋ Tambah Penyewaan</button>
+      </div>
+      <div class="filters">
+        <input id="searchRental" type="search" placeholder="Cari nama pelanggan atau mobil...">
+        <select id="filterStatus" aria-label="Filter status">
+          <option value="Semua">Semua status</option><option>Berlangsung</option><option>Selesai</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Pelanggan</th><th>Mobil</th><th>Tanggal Sewa</th><th>Durasi</th><th>Total Harga</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody id="rentalsTable"></tbody>
+        </table>
+      </div>
+    </section>
+    <footer>© 2026 RentCar Admin · Website latihan untuk ujian</footer>
   </main>
-  <footer>Website Absensi Sederhana · Proyek pembelajaran HTML, CSS, dan JavaScript</footer>
 
-  <script>
-    const STORAGE_KEY = "dataAbsensiSederhana";
-    const form = document.getElementById("attendanceForm");
-    const nameInput = document.getElementById("studentName");
-    const dateInput = document.getElementById("attendanceDate");
-    const statusInput = document.getElementById("attendanceStatus");
-    const body = document.getElementById("attendanceBody");
-    const searchInput = document.getElementById("searchInput");
-    const filterStatus = document.getElementById("filterStatus");
-    let attendanceData = loadData();
+  <dialog id="carDialog">
+    <form id="carForm" class="dialog-form">
+      <div class="dialog-heading"><div><p class="eyebrow">INVENTARIS</p><h2>Tambah Mobil</h2></div><button type="button" class="close-button" data-close="carDialog" aria-label="Tutup">×</button></div>
+      <label>Nama mobil<input name="name" required placeholder="Contoh: Toyota Avanza"></label>
+      <label>Nomor polisi<input name="plate" required placeholder="Contoh: B 1234 ABC"></label>
+      <label>Harga sewa per hari (Rp)<input name="price" type="number" min="1" required placeholder="350000"></label>
+      <div class="form-actions"><button type="button" class="button secondary" data-close="carDialog">Batal</button><button class="button primary" type="submit">Simpan Mobil</button></div>
+    </form>
+  </dialog>
 
-    function todayLocal() {
-      const now = new Date();
-      const offset = now.getTimezoneOffset();
-      return new Date(now.getTime() - offset * 60000).toISOString().slice(0, 10);
-    }
-    dateInput.value = todayLocal();
-
-    function loadData() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-      catch (error) { return []; }
-    }
-    function saveData() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(attendanceData));
-    }
-    function escapeHTML(value) {
-      return String(value).replace(/[&<>"']/g, char => ({
-        "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
-      })[char]);
-    }
-    function formatDate(date) {
-      if (!date) return "-";
-      const parts = date.split("-");
-      return `${parts[2]}/${parts[1]}/${parts[0]}`;
-    }
-    form.addEventListener("submit", event => {
-      event.preventDefault();
-      const name = nameInput.value.trim();
-      if (!name) { nameInput.focus(); return; }
-      attendanceData.unshift({
-        id: (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random(),
-        name, date: dateInput.value, status: statusInput.value
-      });
-      saveData();
-      form.reset();
-      dateInput.value = todayLocal();
-      statusInput.value = "Hadir";
-      render();
-      nameInput.focus();
-    });
-    function removeRecord(id) {
-      if (!confirm("Hapus data absensi ini?")) return;
-      attendanceData = attendanceData.filter(item => item.id !== id);
-      saveData();
-      render();
-    }
-    function render() {
-      const query = searchInput.value.trim().toLowerCase();
-      const selectedStatus = filterStatus.value;
-      const filtered = attendanceData.filter(item =>
-        item.name.toLowerCase().includes(query) &&
-        (!selectedStatus || item.status === selectedStatus)
-      );
-      body.innerHTML = filtered.map((item, index) => `
-        <tr>
-          <td>${index + 1}</td>
-          <td>${escapeHTML(item.name)}</td>
-          <td>${formatDate(item.date)}</td>
-          <td><span class="status ${item.status}">${item.status}</span></td>
-          <td><button class="danger" type="button" data-delete="${escapeHTML(item.id)}">Hapus</button></td>
-        </tr>`).join("");
-      document.getElementById("emptyMessage").style.display = filtered.length ? "none" : "block";
-      document.getElementById("totalCount").textContent = attendanceData.length;
-      document.getElementById("presentCount").textContent = attendanceData.filter(x => x.status === "Hadir").length;
-      document.getElementById("permissionCount").textContent = attendanceData.filter(x => x.status === "Izin").length;
-      document.getElementById("otherCount").textContent = attendanceData.filter(x => x.status === "Sakit" || x.status === "Alpa").length;
-    }
-    body.addEventListener("click", event => {
-      const button = event.target.closest("[data-delete]");
-      if (button) removeRecord(button.dataset.delete);
-    });
-    searchInput.addEventListener("input", render);
-    filterStatus.addEventListener("change", render);
-    document.getElementById("exportButton").addEventListener("click", () => {
-      if (!attendanceData.length) { alert("Belum ada data untuk diekspor."); return; }
-      const rows = [["Nama", "Tanggal", "Status"], ...attendanceData.map(x => [x.name, x.date, x.status])];
-      const csv = "\uFEFF" + rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\r\n");
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url; link.download = "data-absensi.csv";
-      document.body.appendChild(link); link.click(); link.remove();
-      URL.revokeObjectURL(url);
-    });
-    render();
-  </script>
+  <dialog id="rentalDialog">
+    <form id="rentalForm" class="dialog-form">
+      <div class="dialog-heading"><div><p class="eyebrow">TRANSAKSI</p><h2>Tambah Penyewaan</h2></div><button type="button" class="close-button" data-close="rentalDialog" aria-label="Tutup">×</button></div>
+      <label>Nama pelanggan<input name="customer" required placeholder="Nama lengkap pelanggan"></label>
+      <label>Pilih mobil<select name="carId" id="rentalCarSelect" required></select></label>
+      <div class="form-grid">
+        <label>Tanggal sewa<input name="date" type="date" required></label>
+        <label>Durasi (hari)<input name="days" type="number" min="1" value="1" required></label>
+      </div>
+      <p class="price-preview" id="pricePreview">Total harga: Rp0</p>
+      <p class="form-hint">Mobil yang sedang disewa tidak dapat dipilih sampai statusnya selesai.</p>
+      <div class="form-actions"><button type="button" class="button secondary" data-close="rentalDialog">Batal</button><button class="button primary" type="submit">Simpan Penyewaan</button></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="script.js"></script>
 </body>
 </html>
