@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Absensi Sederhana</title>
+  <style>
+    :root { --primary:#3157c8; --ink:#202945; --muted:#68738b; --bg:#f4f6fb; --line:#e4e8f1; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:Arial, Helvetica, sans-serif; background:var(--bg); color:var(--ink); }
+    header { background:linear-gradient(135deg,#3157c8,#6b7fe0); color:white; padding:28px 18px 34px; }
+    .header-inner, main { width:min(100% - 32px, 1000px); margin:auto; }
+    header h1 { margin:0 0 8px; font-size:clamp(25px,4vw,34px); }
+    header p { margin:0; opacity:.92; }
+    main { margin-top:-16px; padding-bottom:36px; }
+    .card { background:white; border-radius:16px; padding:22px; margin-bottom:18px; box-shadow:0 8px 24px #26365d0d; border:1px solid #edf0f7; }
+    h2 { font-size:19px; margin:0 0 18px; }
+    .form-grid { display:grid; grid-template-columns:2fr 1fr 1fr auto; gap:12px; align-items:end; }
+    label { display:block; font-size:13px; font-weight:700; margin-bottom:7px; color:#4c5872; }
+    input, select { width:100%; padding:12px; border:1px solid #d8deeb; border-radius:9px; background:white; color:var(--ink); font:inherit; }
+    input:focus, select:focus { outline:2px solid #cbd5ff; border-color:var(--primary); }
+    button { border:0; border-radius:9px; padding:12px 15px; font-weight:700; font-size:14px; cursor:pointer; }
+    .primary { background:var(--primary); color:white; }
+    .secondary { background:#eef1ff; color:#3150b7; }
+    .danger { background:#fff0f0; color:#b42332; padding:8px 10px; }
+    .toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px; }
+    .toolbar input { max-width:240px; }
+    .toolbar select { max-width:190px; }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; min-width:600px; }
+    th, td { text-align:left; padding:13px 12px; border-bottom:1px solid var(--line); font-size:14px; }
+    th { color:#66718a; font-size:12px; text-transform:uppercase; letter-spacing:.04em; background:#fafbfe; }
+    .status { display:inline-block; padding:5px 9px; border-radius:20px; font-size:12px; font-weight:700; }
+    .Hadir { color:#167447; background:#e5f8ed; }
+    .Izin { color:#8a5a00; background:#fff3d5; }
+    .Sakit { color:#2456a6; background:#e7efff; }
+    .Alpa { color:#a62b39; background:#ffeaed; }
+    .empty { text-align:center; color:var(--muted); padding:28px 12px; }
+    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px; }
+    .stat { border:1px solid var(--line); border-radius:12px; padding:14px; }
+    .stat span { display:block; color:var(--muted); font-size:12px; margin-bottom:8px; }
+    .stat strong { font-size:24px; }
+    .notice { color:var(--muted); font-size:12px; line-height:1.5; margin:14px 0 0; }
+    footer { text-align:center; color:var(--muted); font-size:12px; padding:0 16px 24px; }
+    @media(max-width:760px) { .form-grid { grid-template-columns:1fr 1fr; } .form-grid .name-field { grid-column:1/-1; } .form-grid button { width:100%; } .stats { grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:430px) { .card { padding:16px; } .form-grid { grid-template-columns:1fr; } .form-grid .name-field { grid-column:auto; } .toolbar input, .toolbar select { max-width:none; flex:1 1 100%; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <h1>📋 Absensi Sederhana</h1>
+      <p>Catat kehadiran dengan cepat dan praktis.</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Tambah Data Kehadiran</h2>
+      <form id="attendanceForm">
+        <div class="form-grid">
+          <div class="name-field">
+            <label for="studentName">Nama</label>
+            <input id="studentName" type="text" placeholder="Masukkan nama lengkap" maxlength="80" required>
+          </div>
+          <div>
+            <label for="attendanceDate">Tanggal</label>
+            <input id="attendanceDate" type="date" required>
+          </div>
+          <div>
+            <label for="attendanceStatus">Status</label>
+            <select id="attendanceStatus" required>
+              <option value="Hadir">Hadir</option>
+              <option value="Izin">Izin</option>
+              <option value="Sakit">Sakit</option>
+              <option value="Alpa">Alpa</option>
+            </select>
+          </div>
+          <button class="primary" type="submit">+ Simpan</button>
+        </div>
+      </form>
+      <p class="notice">Data tersimpan di browser/perangkat ini. Gunakan tombol Ekspor CSV untuk mengunduh salinan data.</p>
+    </section>
+
+    <section class="stats" aria-label="Ringkasan absensi">
+      <div class="stat"><span>Total Data</span><strong id="totalCount">0</strong></div>
+      <div class="stat"><span>Hadir</span><strong id="presentCount">0</strong></div>
+      <div class="stat"><span>Izin</span><strong id="permissionCount">0</strong></div>
+      <div class="stat"><span>Sakit + Alpa</span><strong id="otherCount">0</strong></div>
+    </section>
+
+    <section class="card">
+      <h2>Daftar Kehadiran</h2>
+      <div class="toolbar">
+        <input id="searchInput" type="search" placeholder="Cari nama...">
+        <select id="filterStatus" aria-label="Filter status">
+          <option value="">Semua status</option>
+          <option>Hadir</option><option>Izin</option><option>Sakit</option><option>Alpa</option>
+        </select>
+        <button class="secondary" id="exportButton" type="button">Ekspor CSV</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>No.</th><th>Nama</th><th>Tanggal</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody id="attendanceBody"></tbody>
+        </table>
+        <div id="emptyMessage" class="empty">Belum ada data absensi. Tambahkan data melalui formulir di atas.</div>
+      </div>
+    </section>
+  </main>
+  <footer>Website Absensi Sederhana · Proyek pembelajaran HTML, CSS, dan JavaScript</footer>
+
+  <script>
+    const STORAGE_KEY = "dataAbsensiSederhana";
+    const form = document.getElementById("attendanceForm");
+    const nameInput = document.getElementById("studentName");
+    const dateInput = document.getElementById("attendanceDate");
+    const statusInput = document.getElementById("attendanceStatus");
+    const body = document.getElementById("attendanceBody");
+    const searchInput = document.getElementById("searchInput");
+    const filterStatus = document.getElementById("filterStatus");
+    let attendanceData = loadData();
+
+    function todayLocal() {
+      const now = new Date();
+      const offset = now.getTimezoneOffset();
+      return new Date(now.getTime() - offset * 60000).toISOString().slice(0, 10);
+    }
+    dateInput.value = todayLocal();
+
+    function loadData() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+      catch (error) { return []; }
+    }
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(attendanceData));
+    }
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+      })[char]);
+    }
+    function formatDate(date) {
+      if (!date) return "-";
+      const parts = date.split("-");
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      const name = nameInput.value.trim();
+      if (!name) { nameInput.focus(); return; }
+      attendanceData.unshift({
+        id: (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random(),
+        name, date: dateInput.value, status: statusInput.value
+      });
+      saveData();
+      form.reset();
+      dateInput.value = todayLocal();
+      statusInput.value = "Hadir";
+      render();
+      nameInput.focus();
+    });
+    function removeRecord(id) {
+      if (!confirm("Hapus data absensi ini?")) return;
+      attendanceData = attendanceData.filter(item => item.id !== id);
+      saveData();
+      render();
+    }
+    function render() {
+      const query = searchInput.value.trim().toLowerCase();
+      const selectedStatus = filterStatus.value;
+      const filtered = attendanceData.filter(item =>
+        item.name.toLowerCase().includes(query) &&
+        (!selectedStatus || item.status === selectedStatus)
+      );
+      body.innerHTML = filtered.map((item, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${escapeHTML(item.name)}</td>
+          <td>${formatDate(item.date)}</td>
+          <td><span class="status ${item.status}">${item.status}</span></td>
+          <td><button class="danger" type="button" data-delete="${escapeHTML(item.id)}">Hapus</button></td>
+        </tr>`).join("");
+      document.getElementById("emptyMessage").style.display = filtered.length ? "none" : "block";
+      document.getElementById("totalCount").textContent = attendanceData.length;
+      document.getElementById("presentCount").textContent = attendanceData.filter(x => x.status === "Hadir").length;
+      document.getElementById("permissionCount").textContent = attendanceData.filter(x => x.status === "Izin").length;
+      document.getElementById("otherCount").textContent = attendanceData.filter(x => x.status === "Sakit" || x.status === "Alpa").length;
+    }
+    body.addEventListener("click", event => {
+      const button = event.target.closest("[data-delete]");
+      if (button) removeRecord(button.dataset.delete);
+    });
+    searchInput.addEventListener("input", render);
+    filterStatus.addEventListener("change", render);
+    document.getElementById("exportButton").addEventListener("click", () => {
+      if (!attendanceData.length) { alert("Belum ada data untuk diekspor."); return; }
+      const rows = [["Nama", "Tanggal", "Status"], ...attendanceData.map(x => [x.name, x.date, x.status])];
+      const csv = "\uFEFF" + rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\r\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url; link.download = "data-absensi.csv";
+      document.body.appendChild(link); link.click(); link.remove();
+      URL.revokeObjectURL(url);
+    });
+    render();
+  </script>
+</body>
+</html>
